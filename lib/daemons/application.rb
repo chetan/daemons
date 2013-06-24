@@ -402,12 +402,12 @@ module Daemons
           STDOUT.flush
           
           begin
-            Timeout::timeout(@force_kill_waittime) {
+            Timeout::timeout(@force_kill_waittime, TimeoutError) {
               while Pid.running?(pid)
                 sleep(0.2)
               end
             }
-          rescue Timeout::Error
+          rescue TimeoutError
             puts "#{self.group.app_name}: process with pid #{pid} won't stop, we forcefully kill it..."
             STDOUT.flush
             
@@ -417,12 +417,12 @@ module Daemons
             end
             
             begin
-              Timeout::timeout(20) {
+              Timeout::timeout(20, TimeoutError) {
                 while Pid.running?(pid)
                   sleep(1)
                 end
               }
-            rescue Timeout::Error
+            rescue TimeoutError
               puts "#{self.group.app_name}: unable to forcefully kill process with pid #{pid}."
               STDOUT.flush
             end

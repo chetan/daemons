@@ -119,7 +119,7 @@ module Daemons
       begin
         pid = @pid.pid
         Process.kill(Application::SIGNAL, pid)
-		Timeout::timeout(5) {      
+        Timeout::timeout(5, TimeoutError) {
           while Pid.running?(pid)
             sleep(0.1)
           end
